@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  postgres_db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=123000
+      - POSTGRES_USER=medoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres:/var/lib/postgresql/data/
+    restart: always
+    networks:
+      - vision
+
+  odoo_web:
+    image: odoo:latest
+    depends_on:
+      - postgres_db
+    networks:
+      - vision
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=postgres_db
+      - USER=medoo
+      - PASSWORD=123000
+    volumes:
+      - ./odoo-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./odoo-addons:/mnt/extra-addons
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    depends_on:
+      - postgres_db
+    ports:
+      - "80:80"
+    networks:
+      - vision
+    restart: unless-stopped
+
+networks:
+  vision:
+    driver: bridge
