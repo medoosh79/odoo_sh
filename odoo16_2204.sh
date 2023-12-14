@@ -20,7 +20,7 @@
 ################################################################################
 
 ##fixed parameters
-#instead of odoo use ur user name .EG OE_USER="mahmoud"
+#instead of odoo use ur user name .EG OE_USER="mohamed"
 OE_USER="odoo"
 OE_BRANCH="17.0"
 
